@@ -1,0 +1,56 @@
+class WordFilter
+{
+private:
+    unordered_map<string, map<string, int>> wordsList;
+
+public:
+    WordFilter(const vector<string> &words)
+    {
+        int size = words.size();
+        for (int i = 0; i < size; i++)
+        {
+            //if there are same keys, we just have to return max anyway
+            int len = words[i].length();
+            len = min(len, 7);
+            for (int j = 1; j <= len; j++)
+            {
+                string temp = words[i].substr(0, j);
+                wordsList[temp][words[i]] = i;
+            }
+        }
+    }
+
+    int f(string prefix, string suffix)
+    {
+        //get the map to search for
+        int preLen = prefix.length();
+        preLen = min(preLen, 7);
+
+        auto ToSearch = wordsList.find(prefix.substr(0, preLen));
+
+        if (ToSearch == wordsList.end())
+            return -1;
+
+        auto mapToSearch = ToSearch->second;
+
+        int pref_idx, suf_idx;
+        int idx = -1;
+        for (auto itr = mapToSearch.rbegin(); itr != mapToSearch.rend(); itr++)
+        {
+            pref_idx = itr->first.find(prefix);
+            suf_idx = itr->first.rfind(suffix);
+
+            if ((pref_idx == 0) && (suf_idx == itr->first.length() - suffix.length()))
+            {
+                if( idx < itr->second ) 
+                    idx = itr->second;
+            }
+        }
+        return idx;
+    }
+};
+/**
+ * Your WordFilter object will be instantiated and called as such:
+ * WordFilter* obj = new WordFilter(words);
+ * int param_1 = obj->f(prefix,suffix);
+ */
