@@ -1,0 +1,24 @@
+class Solution {
+public:
+    bool checkPossibility(vector<int>& nums) {
+    	if (nums.size() < 2) return true;
+
+	for (int i = 0, mods = 0; i <= nums.size()-2; ++i) {
+		if (nums[i] > nums[i+1]) {
+			++mods; // we need to modify either the current element or the next element
+			
+			if (mods > 1) return false;
+			
+			if ((i == 0 or nums[i-1] <= nums[i+1]) and (i == nums.size()-2 or nums[i+1] <= nums[i+2])) {
+				// if these conditions hold, we make the current element as small as the next element
+				// i.e., if before, the array was: w, x, y, z and w < x > y <= z & w < y, then after: w < y = y <= z
+				nums[i] = nums[i+1];
+			} else { 
+				// otherwise, we make the next element as big as current element, and we will see in the next iteration if there is an issue
+				nums[i+1] = nums[i];
+			}
+		}
+	}
+	return true;
+    }
+};
