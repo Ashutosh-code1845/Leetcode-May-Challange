@@ -1,0 +1,29 @@
+class Solution {
+public:
+    bool isPossible(vector<int>& target) {
+        int n=target.size();
+        long long int sum=0;
+        priority_queue<long long int> pq;
+        for(auto it:target){
+            sum+=it;
+            pq.push(it);
+        }
+        while(pq.size()!=0)
+        {
+            long long int top=pq.top();pq.pop();
+            if(top==0)continue;
+            if(top==1)
+            {
+                sum-=1;
+                continue;
+            }
+            long long int sumRem=sum-top;
+            if(sumRem<=1)return sumRem;
+            if(top-sumRem<=0)return false;
+            sum-=top;
+            pq.push(top%(sumRem));
+            sum+=top%sumRem;
+        }
+        return true;
+    }
+};
