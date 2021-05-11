@@ -1,0 +1,47 @@
+//----------------Memoization---------------------
+class Solution {
+public:
+    
+    int solve(vector<int>& cardPoints, int l, int h, int k, vector<vector<int>> &dp)
+    {
+        if(k==0) return 0;
+        
+        if(h<0 || l==cardPoints.size()) return 0;
+        
+        if(dp[l][h]!=-1) return dp[l][h];
+        
+    dp[l][h] = max(cardPoints[l]+solve(cardPoints,l+1,h,k-1,dp), cardPoints[h]+solve(cardPoints,l,h-1,k-1,dp));
+        
+        return dp[l][h];
+        
+    }
+    int maxScore(vector<int>& cardPoints, int k) {
+        int n=cardPoints.size();
+        vector<vector<int>> dp(n,vector<int>(n,-1));
+        return solve(cardPoints,0,n-1,k,dp);
+    }
+};
+
+//--------------Tabulated(Better)-----------------
+class Solution {
+public:
+    int maxScore(vector<int>& cardPoints, int k) {
+        int n = cardPoints.size();
+        vector<int>front(k);
+        vector<int>back(k);
+        //initialize 
+        front[0] = cardPoints[0];
+        back[0] = cardPoints[n-1];
+        for(int i=1;i<k;i++)
+        {
+            front[i] = front[i-1]+cardPoints[i];
+            back[i] = back[i-1]+cardPoints[n-i-1];
+        }
+        int res = max(front[k-1],back[k-1]);
+        for(int i=0;i<k-1;i++)
+        {
+            res = max(res,front[i]+back[k-i-2]);
+        }
+        return res;
+    }
+};
