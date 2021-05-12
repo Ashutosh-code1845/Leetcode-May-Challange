@@ -1,0 +1,46 @@
+//----------------Brute Force------------------
+private int[][] data;
+
+public NumMatrix(int[][] matrix) {
+    data = matrix;
+}
+
+public int sumRegion(int row1, int col1, int row2, int col2) {
+    int sum = 0;
+    for (int r = row1; r <= row2; r++) {
+        for (int c = col1; c <= col2; c++) {
+            sum += data[r][c];
+        }
+    }
+    return sum;
+}
+
+
+//--------------Dynammic Programming------------------------
+class NumMatrix {
+public:
+    vector<vector<int>> dp;
+    
+    NumMatrix(vector<vector<int>>& matrix) {
+        if (matrix.size() == 0 || matrix[0].size() == 0) return;
+
+        dp.resize(1 + matrix.size(), vector<int>(1 + matrix[0].size())); 
+        
+        for(int i=0; i<matrix.size(); i++)
+        {
+            for(int j=0; j<matrix[0].size(); j++)
+            {
+                dp[i][j+1] = dp[i][j] + matrix[i][j];
+            }
+        }
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        int sum = 0;
+        for(int r=row1; r<=row2; r++)
+        {
+            sum+= dp[r][col2+1] - dp[r][col1];
+        }
+        return sum;
+    }
+};
