@@ -1,0 +1,29 @@
+class Solution {
+public:
+    bool solve(string word, string pattern)
+    {
+        unordered_map<char,char> wm,pm;
+        
+        for(int i=0; i<word.length(); i++)
+        {
+            if(wm.find(word[i])==wm.end())
+                wm[word[i]]=pattern[i];
+            
+            if(pm.find(pattern[i])==pm.end())
+                pm[pattern[i]]=word[i];
+            
+            if (wm[word[i]] != pattern[i] || pm[pattern[i]] != word[i])
+                return false;
+        }
+        return true;
+    }
+    vector<string> findAndReplacePattern(vector<string>& words, string pattern) {
+        vector<string> res;
+        for(int i=0; i<words.size(); i++)
+        {
+            if(solve(words[i],pattern))
+                res.push_back(words[i]);
+        }
+        return res;
+    }
+};
