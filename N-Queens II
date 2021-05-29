@@ -1,0 +1,52 @@
+class Solution {
+    bool isRowFree(vector<string> &board, int row){
+        int n = board.size();
+        for(int col = 0; col < n; col++)
+            if(board[row][col] == 'Q') return false;
+        return true;
+    }
+    bool isDiagonalFree(vector<string> &board, int row, int col){
+        int n = board.size();
+        int i = row, j = col;
+        
+        //Only need to check left side diagonals
+        while(i >= 0 && j >= 0){
+            if(board[i][j] == 'Q') return false;
+            i--, j--;
+        }
+        i = row, j = col;
+        while(i < n && j >= 0){
+            if(board[i][j] == 'Q') return false;
+            i++, j--;
+        }
+        return true;
+    }
+public:
+    void solve(vector<string> &board, int curr_col,int &ans){
+        int n = board.size();
+        
+        if(curr_col == n){
+            ans++;
+            return;
+        } 
+        
+        //Check for valid row for curr_col where queen can be placed
+        for(int curr_row = 0; curr_row < n; curr_row++){
+            if(isRowFree(board, curr_row)  &&                
+               isDiagonalFree(board, curr_row, curr_col))
+            {
+                board[curr_row][curr_col] = 'Q';
+                solve(board,curr_col+1,ans);
+                board[curr_row][curr_col] = '.';   //backtrack step
+            }
+        }
+    }
+    
+    int totalNQueens(int n) {
+        vector<string> board (n ,string(n,'.'));
+        int ans=0;
+        
+        solve(board, 0, ans);
+        return ans;
+    }
+};
